@@ -145,7 +145,10 @@ class _PinyinGameState extends State<PinyinGame> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text('读作', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                const Text(
+                  '读作',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
               ],
             ),
           ),

@@ -9,13 +9,13 @@ class MatchingGame extends StatefulWidget {
 }
 
 class _MatchingGameState extends State<MatchingGame> {
-  final List<IconData> _icons = [
-    Icons.pets,
-    Icons.cake,
-    Icons.flight,
-    Icons.music_note,
-    Icons.star,
-    Icons.favorite,
+  final List<Map<String, dynamic>> _patterns = [
+    {'emoji': '🌟', 'color': Colors.amber},
+    {'emoji': '🍎', 'color': Colors.red},
+    {'emoji': '🦋', 'color': Colors.blue},
+    {'emoji': '🌸', 'color': Colors.pink},
+    {'emoji': '🐱', 'color': Colors.orange},
+    {'emoji': '🌈', 'color': Colors.purple},
   ];
 
   late List<int> _cards;
@@ -33,7 +33,7 @@ class _MatchingGameState extends State<MatchingGame> {
   }
 
   void _initGame() {
-    final pairs = List<int>.from([0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5]);
+    final pairs = [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5];
     pairs.shuffle();
     _cards = pairs;
     _flipped = List<bool>.filled(12, false);
@@ -72,11 +72,17 @@ class _MatchingGameState extends State<MatchingGame> {
         }
       });
     } else {
+      final first = _firstIndex;
+      final second = _secondIndex;
       Future.delayed(const Duration(milliseconds: 800), () {
         if (mounted) {
           setState(() {
-            _flipped[_firstIndex] = false;
-            _flipped[_secondIndex] = false;
+            if (first >= 0 && first < _flipped.length) {
+              _flipped[first] = false;
+            }
+            if (second >= 0 && second < _flipped.length) {
+              _flipped[second] = false;
+            }
             _firstIndex = -1;
             _secondIndex = -1;
           });
@@ -120,6 +126,14 @@ class _MatchingGameState extends State<MatchingGame> {
     );
   }
 
+  Color _getCardColor(int index) {
+    return _patterns[_cards[index]]['color'];
+  }
+
+  String _getCardEmoji(int index) {
+    return _patterns[_cards[index]]['emoji'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -147,28 +161,53 @@ class _MatchingGameState extends State<MatchingGame> {
               itemBuilder: (context, index) {
                 final isFlipped = _flipped[index] || _matched[index];
                 final isMatched = _matched[index];
+                final cardColor = _getCardColor(index);
 
                 return GestureDetector(
                   onTap: () => _onCardTap(index),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     decoration: BoxDecoration(
-                      color: isMatched
-                          ? Colors.green.withOpacity(0.3)
+                      gradient: isMatched
+                          ? LinearGradient(
+                              colors: [Colors.green.shade300, Colors.green.shade400],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
                           : isFlipped
-                              ? Colors.white
-                              : Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 5)],
+                              ? LinearGradient(
+                                  colors: [cardColor.withOpacity(0.7), cardColor],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
+                              : LinearGradient(
+                                  colors: [
+                                    Theme.of(context).primaryColor.withOpacity(0.5),
+                                    Theme.of(context).primaryColor.withOpacity(0.8),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Center(
                       child: isFlipped
-                          ? Icon(
-                              _icons[_cards[index]],
-                              size: 40,
-                              color: Theme.of(context).primaryColor,
+                          ? Text(
+                              _getCardEmoji(index),
+                              style: const TextStyle(fontSize: 35),
                             )
-                          : const Icon(Icons.question_mark, color: Colors.white, size: 40),
+                          : Icon(
+                              Icons.touch_app,
+                              color: Colors.white.withOpacity(0.9),
+                              size: 35,
+                            ),
                     ),
                   ),
                 );

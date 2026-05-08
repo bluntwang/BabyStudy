@@ -16,13 +16,14 @@ class AppTheme {
         secondary: secondaryColor,
         tertiary: accentColor,
       ),
+      fontFamily: 'SimSun',
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(60, 60),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          textStyle: const TextStyle(fontSize: 18),
+          textStyle: const TextStyle(fontSize: 18, fontFamily: 'SimSun'),
         ),
       ),
       textTheme: const TextTheme(
@@ -30,14 +31,16 @@ class AppTheme {
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: textColor,
+          fontFamily: 'SimSun',
         ),
         headlineMedium: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: textColor,
+          fontFamily: 'SimSun',
         ),
-        bodyLarge: TextStyle(fontSize: 18, color: textColor),
-        bodyMedium: TextStyle(fontSize: 16, color: textColor),
+        bodyLarge: TextStyle(fontSize: 18, color: textColor, fontFamily: 'SimSun'),
+        bodyMedium: TextStyle(fontSize: 16, color: textColor, fontFamily: 'SimSun'),
       ),
     );
   }

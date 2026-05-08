@@ -10,12 +10,13 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  riverpod: ^2.4.9
+  flutter_riverpod: ^2.4.9
   shared_preferences: ^2.2.2
   sqflite: ^2.3.0
   path: ^1.8.3
   audioplayers: ^5.2.1
   lottie: ^3.0.0
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/audio/
+  fonts:
+    - family: SimSun
+      fonts:
+        - asset: assets/fonts/simsun.ttc

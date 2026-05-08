@@ -11,6 +11,7 @@ import '../games/vocabulary/vocabulary_game.dart';
 import '../games/drawing/drawing_game.dart';
 import '../games/pinyin/pinyin_game.dart';
 import '../games/pinyin/pinyin_challenge_game.dart';
+import '../games/animal_recognition/animal_game.dart';
 
 class GameScreen extends StatefulWidget {
   final String gameType;
@@ -68,6 +69,8 @@ class _GameScreenState extends State<GameScreen> {
         return const PinyinChallengeGame();
       case 'drawing':
         return const DrawingGame();
+      case 'animal':
+        return const AnimalGame();
       case 'speaking':
         return _buildComingSoon();
       case 'story':
@@ -113,6 +116,7 @@ class _GameScreenState extends State<GameScreen> {
       'pinyin_game': '拼音闯关',
       'drawing': '自由绘画',
       'story': '故事创编',
+      'animal': '动物认知',
     };
     return titles[type] ?? '游戏';
   }

@@ -84,9 +84,8 @@ class GameListScreen extends StatelessWidget {
         return [
           {'name': '形状识别', 'icon': Icons.category, 'type': 'shape'},
           {'name': '颜色识别', 'icon': Icons.palette, 'type': 'color'},
+          {'name': '动物认知', 'icon': Icons.pets, 'type': 'animal'},
           {'name': '大小识别', 'icon': Icons.straighten, 'type': 'size'},
-          {'name': '配对游戏', 'icon': Icons.grid_view, 'type': 'matching'},
-          {'name': '连连看', 'icon': Icons.link, 'type': 'connect'},
         ];
       case 'medium':
         return [
