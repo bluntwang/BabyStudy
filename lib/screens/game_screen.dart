@@ -109,7 +109,7 @@ class _GameScreenState extends State<GameScreen> {
       'matching': '配对游戏',
       'connect': '连连看',
       'counting': '数数游戏',
-      'addition': '加法挑战',
+      'addition': '加减法',
       'vocabulary': '词汇学习',
       'speaking': '看图说话',
       'pinyin': '拼音认知',

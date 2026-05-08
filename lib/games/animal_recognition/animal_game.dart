@@ -53,6 +53,7 @@ class _AnimalGameState extends State<AnimalGame> {
   int _score = 0;
   int _round = 0;
   static const int _totalRounds = 10;
+  final Set<int> _usedAnimalIndices = {}; // 记录已出题目，确保不重复
 
   @override
   void initState() {
@@ -62,11 +63,26 @@ class _AnimalGameState extends State<AnimalGame> {
 
   void _generateNewRound() {
     final random = Random();
-    _targetAnimal = _animals[random.nextInt(_animals.length)];
 
+    // 如果所有动物都用过了，重置记录
+    if (_usedAnimalIndices.length >= _animals.length) {
+      _usedAnimalIndices.clear();
+    }
+
+    // 选择一个未被使用过的动物
+    int availableIndex;
+    do {
+      availableIndex = random.nextInt(_animals.length);
+    } while (_usedAnimalIndices.contains(availableIndex));
+
+    _usedAnimalIndices.add(availableIndex);
+    _targetAnimal = _animals[availableIndex];
+
+    // 选择选项（确保包含正确答案）
     _options = [_targetAnimal];
     while (_options.length < 4) {
-      final option = _animals[random.nextInt(_animals.length)];
+      final optionIndex = random.nextInt(_animals.length);
+      final option = _animals[optionIndex];
       if (!_options.contains(option)) {
         _options.add(option);
       }

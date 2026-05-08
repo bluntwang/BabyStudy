@@ -23,6 +23,7 @@ class _ColorGameState extends State<ColorGame> {
   int _score = 0;
   int _round = 0;
   static const int _totalRounds = 10;
+  final Set<int> _usedColorIndices = {}; // 记录已出题目，确保不重复
 
   @override
   void initState() {
@@ -32,11 +33,25 @@ class _ColorGameState extends State<ColorGame> {
 
   void _generateNewRound() {
     final random = Random();
-    _targetColor = _colors[random.nextInt(_colors.length)];
+
+    // 如果所有颜色都用过了，重置记录
+    if (_usedColorIndices.length >= _colors.length) {
+      _usedColorIndices.clear();
+    }
+
+    // 选择一个未被使用过的颜色
+    int availableIndex;
+    do {
+      availableIndex = random.nextInt(_colors.length);
+    } while (_usedColorIndices.contains(availableIndex));
+
+    _usedColorIndices.add(availableIndex);
+    _targetColor = _colors[availableIndex];
 
     _options = [_targetColor];
     while (_options.length < 4) {
-      final option = _colors[random.nextInt(_colors.length)];
+      final optionIndex = random.nextInt(_colors.length);
+      final option = _colors[optionIndex];
       if (!_options.contains(option)) {
         _options.add(option);
       }

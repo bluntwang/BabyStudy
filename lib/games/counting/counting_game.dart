@@ -22,6 +22,7 @@ class _CountingGameState extends State<CountingGame> {
   int _score = 0;
   int _round = 0;
   static const int _totalRounds = 10;
+  final Set<int> _usedCounts = {}; // 记录已出题目，确保不重复
 
   @override
   void initState() {
@@ -31,7 +32,20 @@ class _CountingGameState extends State<CountingGame> {
 
   void _generateNewRound() {
     final random = Random();
-    _targetCount = random.nextInt(9) + 1;
+
+    // 如果所有数字都用过了，重置记录
+    if (_usedCounts.length >= 9) {
+      _usedCounts.clear();
+    }
+
+    // 选择一个未被使用过的数字
+    int availableCount;
+    do {
+      availableCount = random.nextInt(9) + 1;
+    } while (_usedCounts.contains(availableCount));
+
+    _usedCounts.add(availableCount);
+    _targetCount = availableCount;
 
     _options = [_targetCount];
     while (_options.length < 4) {

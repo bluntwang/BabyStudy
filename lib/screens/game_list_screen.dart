@@ -90,7 +90,7 @@ class GameListScreen extends StatelessWidget {
       case 'medium':
         return [
           {'name': '数数游戏', 'icon': Icons.numbers, 'type': 'counting'},
-          {'name': '加法挑战', 'icon': Icons.add_circle, 'type': 'addition'},
+          {'name': '加减法', 'icon': Icons.add_circle, 'type': 'addition'},
           {'name': '词汇学习', 'icon': Icons.book, 'type': 'vocabulary'},
           {'name': '看图说话', 'icon': Icons.image, 'type': 'speaking'},
         ];

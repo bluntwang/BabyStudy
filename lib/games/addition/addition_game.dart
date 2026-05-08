@@ -11,6 +11,7 @@ class AdditionGame extends StatefulWidget {
 class _AdditionGameState extends State<AdditionGame> {
   int _num1 = 0;
   int _num2 = 0;
+  String _operator = '+'; // 运算符：加法或减法
   late List<int> _options;
   int _score = 0;
   int _round = 0;
@@ -24,22 +25,43 @@ class _AdditionGameState extends State<AdditionGame> {
 
   void _generateNewRound() {
     final random = Random();
-    _num1 = random.nextInt(5) + 1;
-    _num2 = random.nextInt(5) + 1;
 
-    final correctAnswer = _num1 + _num2;
-    _options = [correctAnswer];
-    while (_options.length < 4) {
-      final option = random.nextInt(10) + 1;
-      if (!_options.contains(option)) {
-        _options.add(option);
-      }
+    // 随机选择加法或减法
+    _operator = random.nextBool() ? '+' : '-';
+
+    if (_operator == '+') {
+      // 加法：结果不超过 10
+      _num1 = random.nextInt(5) + 1;
+      _num2 = random.nextInt(5) + 1;
+      final correctAnswer = _num1 + _num2;
+      _options = _generateOptions(correctAnswer, 1, 10);
+    } else {
+      // 减法：结果不能为负数
+      _num1 = random.nextInt(5) + 5; // 5-9
+      _num2 = random.nextInt(_num1) + 1; // 1 到 _num1
+      final correctAnswer = _num1 - _num2;
+      _options = _generateOptions(correctAnswer, 0, 9);
     }
     _options.shuffle();
   }
 
+  List<int> _generateOptions(int correctAnswer, int min, int max) {
+    final random = Random();
+    final options = <int>[correctAnswer];
+    while (options.length < 4) {
+      // 在正确答案附近生成干扰项
+      int option = correctAnswer + random.nextInt(5) - 2;
+      if (option < min) option = min;
+      if (option > max) option = max;
+      if (!options.contains(option)) {
+        options.add(option);
+      }
+    }
+    return options;
+  }
+
   void _checkAnswer(int selected) {
-    final correct = _num1 + _num2;
+    final correct = _operator == '+' ? _num1 + _num2 : _num1 - _num2;
     setState(() {
       if (selected == correct) {
         _score += 10;
@@ -141,7 +163,24 @@ class _AdditionGameState extends State<AdditionGame> {
                   ),
                 ),
                 const SizedBox(width: 20),
-                const Icon(Icons.add, size: 40),
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: _operator == '+' ? Colors.orange.withOpacity(0.2) : Colors.purple.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      _operator,
+                      style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: _operator == '+' ? Colors.orange : Colors.purple,
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(width: 20),
                 Container(
                   width: 60,
@@ -175,8 +214,10 @@ class _AdditionGameState extends State<AdditionGame> {
             ),
           ),
           const SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Wrap(
+            spacing: 20,
+            runSpacing: 20,
+            alignment: WrapAlignment.center,
             children: _options.map((option) {
               return GestureDetector(
                 onTap: () => _checkAnswer(option),

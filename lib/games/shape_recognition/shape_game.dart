@@ -23,6 +23,7 @@ class _ShapeGameState extends State<ShapeGame> {
   int _score = 0;
   int _round = 0;
   static const int _totalRounds = 10;
+  final Set<int> _usedShapeIndices = {}; // 记录已出题目，确保不重复
 
   @override
   void initState() {
@@ -32,11 +33,25 @@ class _ShapeGameState extends State<ShapeGame> {
 
   void _generateNewRound() {
     final random = Random();
-    _targetShape = _shapes[random.nextInt(_shapes.length)];
+
+    // 如果所有形状都用过了，重置记录
+    if (_usedShapeIndices.length >= _shapes.length) {
+      _usedShapeIndices.clear();
+    }
+
+    // 选择一个未被使用过的形状
+    int availableIndex;
+    do {
+      availableIndex = random.nextInt(_shapes.length);
+    } while (_usedShapeIndices.contains(availableIndex));
+
+    _usedShapeIndices.add(availableIndex);
+    _targetShape = _shapes[availableIndex];
 
     _options = [_targetShape];
     while (_options.length < 4) {
-      final option = _shapes[random.nextInt(_shapes.length)];
+      final optionIndex = random.nextInt(_shapes.length);
+      final option = _shapes[optionIndex];
       if (!_options.contains(option)) {
         _options.add(option);
       }
