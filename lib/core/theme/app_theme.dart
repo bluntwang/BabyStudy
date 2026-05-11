@@ -16,7 +16,6 @@ class AppTheme {
         secondary: secondaryColor,
         tertiary: accentColor,
       ),
-      fontFamily: 'SimSun',
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(60, 60),
@@ -31,14 +30,12 @@ class AppTheme {
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: textColor,
-          fontFamily: 'SimSun',
-        ),
+            ),
         headlineMedium: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: textColor,
-          fontFamily: 'SimSun',
-        ),
+            ),
         bodyLarge: TextStyle(fontSize: 18, color: textColor, fontFamily: 'SimSun'),
         bodyMedium: TextStyle(fontSize: 16, color: textColor, fontFamily: 'SimSun'),
       ),

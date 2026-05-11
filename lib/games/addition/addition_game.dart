@@ -60,6 +60,44 @@ class _AdditionGameState extends State<AdditionGame> {
     return options;
   }
 
+  Widget _buildNumberBox(String text, Color bgColor) {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOperatorBox() {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: _operator == '+' ? Colors.orange.withOpacity(0.2) : Colors.purple.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: Text(
+          _operator,
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: _operator == '+' ? Colors.orange : Colors.purple,
+          ),
+        ),
+      ),
+    );
+  }
+
   void _checkAnswer(int selected) {
     final correct = _operator == '+' ? _num1 + _num2 : _num1 - _num2;
     setState(() {
@@ -138,79 +176,29 @@ class _AdditionGameState extends State<AdditionGame> {
           const SizedBox(height: 30),
           const Text('计算结果', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 40),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(25),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$_num1',
-                      style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: _operator == '+' ? Colors.orange.withOpacity(0.2) : Colors.purple.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Text(
-                      _operator,
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: _operator == '+' ? Colors.orange : Colors.purple,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$_num2',
-                      style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                const Text('=', style: TextStyle(fontSize: 40)),
-                const SizedBox(width: 20),
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Center(
-                    child: Text('?', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10)],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildNumberBox('$_num1', Colors.red.withOpacity(0.2)),
+                  const SizedBox(width: 15),
+                  _buildOperatorBox(),
+                  const SizedBox(width: 15),
+                  _buildNumberBox('$_num2', Colors.blue.withOpacity(0.2)),
+                  const SizedBox(width: 15),
+                  const Text('=', style: TextStyle(fontSize: 32)),
+                  const SizedBox(width: 15),
+                  _buildNumberBox('?', Colors.green.withOpacity(0.2)),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 50),
