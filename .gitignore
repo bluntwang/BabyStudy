@@ -60,6 +60,32 @@ app.*.map.json
 # iOS related
 /ios/.symlinks/
 /ios/Pods/
+/ios/Flutter/.last_build_id
+/ios/Flutter/.last_build_runnumber
+/ios/Flutter/build/
+/ios/build/
+/ios/*.xcworkspace
+/ios/Runner/Build/
+
+# macOS related
+/macos/Flutter/.last_build_id
+/macos/Flutter/build/
+/macos/build/
+/macos/*.xcworkspace
+/macos/Runner/Build/
+
+# Xcode derived data
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Simulator
+ios/.ios_configuration_cache.lock
 
 # Windows related
 /windows/flutter/ephemeral/
