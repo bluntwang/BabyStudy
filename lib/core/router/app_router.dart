@@ -3,7 +3,6 @@ import 'package:baby_study/screens/splash_screen.dart';
 import 'package:baby_study/screens/home_screen.dart';
 import 'package:baby_study/screens/game_list_screen.dart';
 import 'package:baby_study/screens/game_screen.dart';
-import 'package:baby_study/games/animal_recognition/animal_game.dart';
 
 class AppRouter {
   static const String splash = '/';

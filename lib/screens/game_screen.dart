@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
+import '../core/theme/app_theme.dart';
 import '../games/shape_recognition/shape_game.dart';
 import '../games/color_recognition/color_game.dart';
 import '../games/size_recognition/size_game.dart';
@@ -27,21 +28,137 @@ class GameScreen extends StatefulWidget {
   State<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
-  final AudioService _audioService = AudioService();
+class _GameScreenState extends State<GameScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _headerController;
+  late Animation<double> _headerAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _headerController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _headerAnimation = CurvedAnimation(
+      parent: _headerController,
+      curve: Curves.easeOutCubic,
+    );
+    _headerController.forward();
+  }
+
+  @override
+  void dispose() {
+    _headerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ageColor = _getAgeGroupColor(widget.ageGroup);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_getGameTitle(widget.gameType)),
-        backgroundColor: _getAgeGroupColor(widget.ageGroup),
-        foregroundColor: Colors.white,
-      ),
       body: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: _buildGameWidget(widget.gameType),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              ageColor.withValues(alpha: 0.15),
+              ageColor.withValues(alpha: 0.05),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(context, ageColor),
+              Expanded(
+                child: _buildGameWidget(widget.gameType),
+              ),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, Color ageColor) {
+    return AnimatedBuilder(
+      animation: _headerAnimation,
+      builder: (context, child) {
+        final animValue = _headerAnimation.value.clamp(0.0, 1.0);
+        return Transform.translate(
+          offset: Offset(0, -20 * (1 - animValue)),
+          child: Opacity(
+            opacity: animValue,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        boxShadow: [
+                          BoxShadow(
+                            color: ageColor.withValues(alpha: 0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.arrow_back_rounded,
+                        color: ageColor,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _getGameTitle(widget.gameType),
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textColor,
+                          ),
+                        ),
+                        Text(
+                          _getAgeGroupHint(),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: ageColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      _getGameIcon(widget.gameType),
+                      color: ageColor,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -90,11 +207,33 @@ class _GameScreenState extends State<GameScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.construction, size: 80, color: Colors.grey),
-          const SizedBox(height: 20),
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryOrange.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.construction_rounded,
+              size: 50,
+              color: AppTheme.primaryOrange,
+            ),
+          ),
+          const SizedBox(height: 24),
           Text(
             '即将推出',
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppTheme.textColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '敬请期待',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[500],
+            ),
           ),
         ],
       ),
@@ -121,16 +260,49 @@ class _GameScreenState extends State<GameScreen> {
     return titles[type] ?? '游戏';
   }
 
+  String _getAgeGroupHint() {
+    switch (widget.ageGroup) {
+      case 'small':
+        return '小班 · 基础认知';
+      case 'medium':
+        return '中班 · 进阶学习';
+      case 'large':
+        return '大班 · 学前准备';
+      default:
+        return '';
+    }
+  }
+
+  IconData _getGameIcon(String type) {
+    final icons = {
+      'shape': Icons.category_rounded,
+      'color': Icons.palette_rounded,
+      'size': Icons.straighten_rounded,
+      'matching': Icons.grid_view_rounded,
+      'connect': Icons.link_rounded,
+      'counting': Icons.numbers_rounded,
+      'addition': Icons.add_circle_rounded,
+      'vocabulary': Icons.book_rounded,
+      'speaking': Icons.image_rounded,
+      'pinyin': Icons.abc_rounded,
+      'pinyin_game': Icons.flag_rounded,
+      'drawing': Icons.brush_rounded,
+      'story': Icons.auto_stories_rounded,
+      'animal': Icons.pets_rounded,
+    };
+    return icons[type] ?? Icons.gamepad_rounded;
+  }
+
   Color _getAgeGroupColor(String key) {
     switch (key) {
       case 'small':
-        return const Color(0xFF5B9BD5);
+        return AppTheme.smallClassColor;
       case 'medium':
-        return const Color(0xFFFF9F43);
+        return AppTheme.mediumClassColor;
       case 'large':
-        return const Color(0xFF2ECC71);
+        return AppTheme.largeClassColor;
       default:
-        return Colors.blue;
+        return AppTheme.primaryBlue;
     }
   }
 }

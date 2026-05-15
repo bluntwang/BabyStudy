@@ -21,37 +21,65 @@ class AudioService {
 
   Future<void> playBGM() async {
     if (!_isMusicEnabled) return;
-    await _bgMusicPlayer.setReleaseMode(ReleaseMode.loop);
-    await _bgMusicPlayer.play(AssetSource('audio/bgm.mp3'));
+    try {
+      await _bgMusicPlayer.setReleaseMode(ReleaseMode.loop);
+      await _bgMusicPlayer.play(AssetSource('audio/bgm.mp3'));
+    } catch (e) {
+      // Audio file not found, ignore silently
+    }
   }
 
   Future<void> stopBGM() async {
-    await _bgMusicPlayer.stop();
+    try {
+      await _bgMusicPlayer.stop();
+    } catch (e) {
+      // Ignore errors when stopping
+    }
   }
 
   Future<void> playCorrect() async {
     if (!_isSfxEnabled) return;
-    await _sfxPlayer.play(AssetSource('audio/correct.mp3'));
+    try {
+      await _sfxPlayer.play(AssetSource('audio/correct.mp3'));
+    } catch (e) {
+      // Audio file not found, ignore silently
+    }
   }
 
   Future<void> playWrong() async {
     if (!_isSfxEnabled) return;
-    await _sfxPlayer.play(AssetSource('audio/wrong.mp3'));
+    try {
+      await _sfxPlayer.play(AssetSource('audio/wrong.mp3'));
+    } catch (e) {
+      // Audio file not found, ignore silently
+    }
   }
 
   Future<void> playStar() async {
     if (!_isSfxEnabled) return;
-    await _sfxPlayer.play(AssetSource('audio/star.mp3'));
+    try {
+      await _sfxPlayer.play(AssetSource('audio/star.mp3'));
+    } catch (e) {
+      // Audio file not found, ignore silently
+    }
   }
 
   Future<void> playClick() async {
     if (!_isSfxEnabled) return;
-    await _sfxPlayer.play(AssetSource('audio/click.mp3'));
+    try {
+      await _sfxPlayer.play(AssetSource('audio/click.mp3'));
+    } catch (e) {
+      // Audio file not found, ignore silently
+    }
   }
 
   Future<void> playWin() async {
     if (!_isSfxEnabled) return;
-    await _sfxPlayer.play(AssetSource('audio/win.mp3'));
+    try {
+      await _sfxPlayer.play(AssetSource('audio/win.mp3'));
+    } catch (e) {
+      // Audio file not found, ignore silently
+    }
   }
 
   void dispose() {
